@@ -23,7 +23,15 @@ class User extends Authenticatable
         'role',
         'workos_id',
         'avatar',
+        'phone_number',
+        'profile_picture',
     ];
+
+    public function dentist(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Dentist::class, 'user_id');
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

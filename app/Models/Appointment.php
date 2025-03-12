@@ -26,4 +26,6 @@ public function dentist()
     return $this->belongsTo(User::class, 'dentist_id');
 }
 
+        
+
 }

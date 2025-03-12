@@ -17,6 +17,16 @@ const sidebarNavItems: NavItem[] = [
         url: '/settings/appearance',
         icon: null,
     },
+    {
+        title: 'Details',
+        url: '/dentistsInfos/create',
+        icon: null,
+    },
+    {
+        title: 'Schedules',
+        url: '/schedules/create',
+        icon: null,
+    },
 ];
 
 export default function SettingsLayout({ children }: PropsWithChildren) {

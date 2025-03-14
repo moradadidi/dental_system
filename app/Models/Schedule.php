@@ -22,4 +22,8 @@ class Schedule extends Model
     {
         return $this->belongsTo(User::class, 'dentist_id');
     }
-}
+
+    public function isAvailableOnDay($day)
+    {
+        return in_array($day, $this->days_of_week);
+    }}

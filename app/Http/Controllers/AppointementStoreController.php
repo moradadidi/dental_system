@@ -20,16 +20,17 @@ class AppointementStoreController extends Controller
             'end_time' => 'required|date',
             'notes' => 'nullable',
         ]);
-        if($request->user()->role === 'patient') {
-            $request->merge(['patient_id' => $request->user()->id]);
+        // if($request->user()->role === 'patient') {
+        //     $request->merge(['patient_id' => $request->user()->id]);
             $request->merge(['dentist_id' => $request->input('dentist_id')]);
 
-        }else{
-            $request->merge(['dentist_id' => $request->user()->id]);
-            $request->merge(['patient_id' => $request->input('patient_id')]);
-        }
+        // }else{
+        //     $request->merge(['dentist_id' => $request->user()->id]);
+        //     $request->merge(['patient_id' => $request->input('patient_id')]);
+        // }
 
         $appointment = Appointment::create($request->all());
+        // dd($appointment);
 
         return redirect()->route('appointments.index');
     }

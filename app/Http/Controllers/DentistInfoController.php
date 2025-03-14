@@ -14,12 +14,27 @@ class DentistInfoController extends Controller
 
     public function index()
     {
-        $dentists = DB::table('users')  
-            ->join('dentists', 'users.id', '=', 'dentists.user_id')
-            ->select('users.*', 'dentists.*')
-            ->where('users.role', 'dentist')
-            ->get();
-        // dd($dentists);
+        $dentists = Dentist::with('user')
+            ->whereHas('user', function($q) {
+                $q->where('role', 'dentist');
+            })
+            ->get()
+            ->map(function($dentist) {
+                return [
+                    'id' => $dentist->id,
+                    'user_id' => $dentist->user_id,
+                    'name' => $dentist->user->name,
+                    'email' => $dentist->user->email,
+                    'phone_number' => $dentist->user->phone_number,
+                    'profile_picture' => $dentist->user->profile_picture,
+                    'specialization' => $dentist->specialization,
+                    'credentials' => $dentist->credentials,
+                    'bio' => $dentist->bio,
+                    'office_address' => $dentist->office_address,
+                    'available_today' => $dentist->available_today, // New attribute
+                ];
+            });
+            // dd($dentists);
         return Inertia::render('dentistsInfos/index', [
             'dentists' => $dentists
         ]);
@@ -27,11 +42,21 @@ class DentistInfoController extends Controller
 
     public function show($id)
     {
-        $dentist = Dentist::findOrFail($id);
-        $user = User::findOrFail($dentist->user_id);
+        $dentist = Dentist::with('user')->findOrFail($id);
+
+        // dd($dentist);
         return Inertia::render('dentistsInfos/show', [
-            'dentist' => $dentist,
-            'user'    => $user,
+            'dentist' => [
+                'id' => $dentist->id,
+                'user_id' => $dentist->user_id,
+                'name' => $dentist->user->name,
+                'email' => $dentist->user->email,
+                'specialization' => $dentist->specialization,
+                'credentials' => $dentist->credentials,
+                'bio' => $dentist->bio,
+                'office_address' => $dentist->office_address,
+                'available_today' => $dentist->available_today,
+            ]
         ]);
     }
 

@@ -11,6 +11,7 @@ use App\Http\Controllers\AppointementEditController;
 use App\Http\Controllers\AppointementUpdateController;
 use App\Http\Controllers\DentistController;
 use App\Http\Controllers\DentistInfoController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ScheduleController;
 
 
@@ -36,10 +37,12 @@ Route::delete('/appointments/{id}', AppointementDestroyController::class)->name(
 Route::get('/appointments/{id}/edit', AppointementEditController::class)->name('appointments.edit');
 Route::put('/appointments/{id}', AppointementUpdateController::class)->name('appointments.update');
 
+Route::get('/myAppointments', [PatientController::class, 'myAppointments'])->name('myAppointments');
+
 
 Route::resource('dentists', DentistController::class);
 
-Route::get('/dentistsInfos', [DentistInfoController::class, 'index'])->name('dentistsInfos.index');
+Route::get('/ourDentists', [DentistInfoController::class, 'index'])->name('dentistsInfos.index');
 Route::post('/dentistsInfos', [DentistInfoController::class, 'store'])->name('dentistsInfos.store');
 Route::get('/dentistsInfos/create', [DentistInfoController::class, 'create'])->name('dentistsInfos.create');
 Route::get('/dentistsInfos/{id}', [DentistInfoController::class, 'show'])->name('dentistsInfos');

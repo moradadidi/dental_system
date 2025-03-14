@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Appointment;
+use App\Models\Dentist;
 use App\Models\User;
 use Illuminate\Support\Str;
 
@@ -21,7 +22,8 @@ class DentistController extends Controller
 
     public function show($id)
     {
-        $dentist = User::where('role', 'dentist')->findOrFail($id);
+        $dentist = User::where('role', 'dentist')->with('dentist')->findOrFail($id);
+        // dd($dentist->user);
         return Inertia::render('dentists/show', [
             'dentist' => $dentist,
         ]);
@@ -57,6 +59,13 @@ class DentistController extends Controller
             'profile_picture' => $profilePicturePath,
             'role'            => 'dentist',
             'avatar'          => 'https://i.pravatar.cc/150?u=' . Str::random(10),
+        ]);
+
+        Dentist::create([
+            'specialization' => 'General Dentistry',
+            'credentials'    => $request->credentials ?? 'DDS',
+            'bio'            => $request->bio ?? 'Experienced dentist with a passion for patient care.',
+            'office_address' => $request->office_address ?? '123 Dental St, Tooth City',
         ]);
 
         return redirect()->route('dentists.index');

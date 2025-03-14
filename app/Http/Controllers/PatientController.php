@@ -12,8 +12,13 @@ class PatientController extends Controller
 {
     public function myAppointments()
     {
+        $appointments = auth()->user()->appointments()->with('dentist')->get();
+
+        $appointments->each(function ($appointment) {
+            $appointment->dentist_info = Dentist::find($appointment->dentist_id);
+        });
         return Inertia::render('patients/appointments', [
-            'appointments' => auth()->user()->appointments()->with('dentist')->get()
+            'appointments' => $appointments,
         ]);
     }
 }

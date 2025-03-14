@@ -23,12 +23,12 @@ const mainNavItems: NavItem[] = [
   },
   {
     title: 'Appointments',
-    url: '/my_appointments',
+    url: '/myAppointments',
     icon: Calendar,
   },
   {
     title: 'Our Dentists',
-    url: '/our_dentists',
+    url: '/ourDentists',
     icon: Users,
   },
   

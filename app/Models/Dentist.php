@@ -42,4 +42,10 @@ class Dentist extends Model
                 ->exists();
         });
     }
+    public function scopeAvailableToday($query)
+    {
+        return $query->whereHas('appointments', function ($q) {
+            $q->whereDate('appointment_date', now()->toDateString());
+        });
+    }
 }

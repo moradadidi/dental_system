@@ -40,3 +40,38 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+// types.ts
+type Dentist = {
+    id: number;
+    user_id: number;
+    name: string;
+    email: string;
+    profile_picture: string | null;
+    specialization: string | null;
+    availableToday?: boolean;
+  };
+  
+  type Appointment = {
+    id: number;
+    dentist: Dentist;
+    start_time: string;
+    end_time: string;
+    status: 'upcoming' | 'completed' | 'canceled';
+    fee: number;
+  };
+  
+  type Stats = {
+    totalDentists: number;
+    activePatients: number;
+    totalAppointments: number;
+    upcomingAppointments: number;
+    completedAppointments: number;
+    canceledAppointments: number;
+    totalRevenue: number;
+    revenueGrowth: number;
+    patientGrowth: number;
+    newDentists: number;
+    revenueLabels: string[];
+    revenueData: number[];
+  };

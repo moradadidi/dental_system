@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import AppLayout from "@/layouts/app-layout";
 import { Head, usePage, Link } from "@inertiajs/react";
 import { 
@@ -29,7 +29,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { type SharedData } from "@/types";
-import { Calendar, Clock, CheckCircle2, XCircle, MapPin, FileText, User, Award, BookOpen } from "lucide-react";
+import { Calendar, Clock, CheckCircle2, XCircle, MapPin, FileText, User, Award, BookOpen , Plus } from "lucide-react";
 
 type Appointment = {
   id: number;
@@ -52,8 +52,8 @@ type Appointment = {
 };
 
 export default function MyAppointments() {
-  const { appointments } = usePage<SharedData>().props;
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const { appointments } = usePage<SharedData>().props as { appointments: Appointment[] };
+  const [selectedAppointment, setSelectedAppointment] = React.useState<Appointment | null>(null);
 console.log(appointments);
   const getStatusConfig = (status: string) => {
     switch (status) {
@@ -89,18 +89,26 @@ console.log(appointments);
       <Head title="My Appointments" />
       <div className="container mx-auto p-4 md:p-8">
         <Card className="border-none shadow-sm">
-          <CardHeader className="space-y-2">
-            <div className="flex items-center gap-3">
+            <CardHeader className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
               <Calendar className="h-6 w-6 text-primary" />
               <div>
                 <CardTitle className="text-2xl">My Appointments</CardTitle>
                 <CardDescription>
-                  View and manage your dental appointments
+                View and manage your dental appointments
                 </CardDescription>
               </div>
+              </div>
+              <Button asChild>
+          <Link href="/appointments/create">
+            <Plus className="mr-2 h-4 w-4" />
+            Book Appointment
+          </Link>
+        </Button>
             </div>
             <Separator className="bg-muted" />
-          </CardHeader>
+            </CardHeader>
           <CardContent>
             {appointments.length === 0 ? (
               <Alert className="border-0 shadow-sm">
@@ -164,7 +172,7 @@ console.log(appointments);
                         </TableCell>
                         <TableCell>
                           <Badge 
-                            variant={statusConfig.variant}
+                            variant={statusConfig.variant as "default" | "success" | "destructive" | "secondary"}
                             className="gap-1"
                           >
                             {statusConfig.icon}
@@ -207,21 +215,21 @@ console.log(appointments);
                                         <p className="font-bold text-lg">{appointment.dentist.name}</p>
                                         <p className="text-sm flex items-center gap-1">
                                           <Award className="h-4 w-4" />
-                                          {appointment.dentist_info.specialization}
+                                          {appointment.dentist_info?.specialization ?? "No specialization available"}
                                         </p>
                                         <p className="text-sm flex items-center gap-1">
                                           <BookOpen className="h-4 w-4" />
-                                          {appointment.dentist_info.credentials}
+                                          {appointment.dentist_info?.credentials ?? "No credentials available"}
                                         </p>
                                         <p className="text-sm flex items-center gap-1">
                                           <MapPin className="h-4 w-4" />
-                                          {appointment.dentist_info.office_address}
+                                          {appointment.dentist_info?.office_address ?? "No office address available"}
                                         </p>
                                       </div>
                                     </div>
                                     <Separator className="my-4" />
                                     <p className="text-sm text-muted-foreground">
-                                      {appointment.dentist_info.bio || "No bio available"}
+                                      {appointment.dentist_info?.bio ?? "No bio available"}
                                     </p>
                                   </div>
 

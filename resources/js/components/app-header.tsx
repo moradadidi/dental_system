@@ -1,61 +1,60 @@
-import { Breadcrumbs } from '@/components/breadcrumbs';
-import { Icon } from '@/components/icon';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { UserMenuContent } from '@/components/user-menu-content';
-import { useInitials } from '@/hooks/use-initials';
-import { cn } from '@/lib/utils';
-import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search , X, Home, Users, Calendar, Moon, Sun} from 'lucide-react';
-import AppLogo from './app-logo';
-import AppLogoIcon from './app-logo-icon';
-
-const mainNavItems: NavItem[] = [
-  {
-    title: 'Dashboard',
-    url: '/dashboard',
-    icon: LayoutGrid,
-  },
-  {
-    title: 'Appointments',
-    url: '/myAppointments',
-    icon: Calendar,
-  },
-  {
-    title: 'Our Dentists',
-    url: '/ourDentists',
-    icon: Users,
-  },
-  
-];
-
-const activeItemStyles = 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
+import React, { useState, useEffect } from "react";
+import AppLayout from "@/layouts/app-layout";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { Icon } from "@/components/icon";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { UserMenuContent } from "@/components/user-menu-content";
+import { useInitials } from "@/hooks/use-initials";
+import { cn } from "@/lib/utils";
+import { type BreadcrumbItem, type NavItem, type SharedData } from "@/types";
+import { Link, usePage } from "@inertiajs/react";
+import { BookOpen, Folder, LayoutGrid, Menu, Search, Plus, X, Home, Users, Calendar, Moon, Sun } from "lucide-react";
+import AppLogo from "./app-logo";
+import AppLogoIcon from "./app-logo-icon";
 
 interface AppHeaderProps {
   breadcrumbs?: BreadcrumbItem[];
 }
 
 export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
+  // Move hooks inside the component.
   const { auth } = usePage<SharedData>().props;
   const getInitials = useInitials();
+  const [currentPath, setCurrentPath] = useState("");
+
+  // Set currentPath safely on client side.
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCurrentPath(window.location.pathname);
+    }
+  }, []);
+
+  const userRole = auth.user?.role || "";
+  console.log("userRole", auth.user.role);
+  const mainNavItems: NavItem[] =
+    userRole === "dentist"
+      ? [
+          { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
+          { title: "Appointments", url: "/dentists/appointments", icon: Calendar },
+          { title: "My Schedule", url: "/schedules/create", icon: Users },
+        ]
+      : [
+          { title: "Appointments", url: "/myAppointments", icon: Calendar },
+          { title: "Our Dentists", url: "/ourDentists", icon: Users },
+          { title: "Book Appointment", url: "/appointments/create", icon: Plus },
+        ];
 
   const rightNavItems: NavItem[] = [
-    {
-      title: 'Informations',
-      url: `/dentistsInfos/create`,
-      icon: Folder,
-    },
-    {
-      title: 'Schedules',
-      url: '/schedules/create',
-      icon: BookOpen,
-    },
+    { title: "Informations", url: `/dentistsInfos/create`, icon: Folder },
+    { title: "Schedules", url: "/schedules/create", icon: BookOpen },
   ];
+
+  const activeItemStyles = "text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100";
 
   return (
     <>
@@ -118,14 +117,14 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                       href={item.url}
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        window.location.pathname === item.url && activeItemStyles,
-                        'h-9 cursor-pointer px-3'
+                        currentPath === item.url && activeItemStyles,
+                        "h-9 cursor-pointer px-3"
                       )}
                     >
                       {item.icon && <Icon iconNode={item.icon} className="mr-2 h-4 w-4" />}
                       {item.title}
                     </Link>
-                    {window.location.pathname === item.url && (
+                    {currentPath === item.url && (
                       <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"></div>
                     )}
                   </NavigationMenuItem>
@@ -168,7 +167,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                   <Avatar className="size-8 overflow-hidden rounded-full">
                     <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
                     <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                      {getInitials(auth.user.name)}
+                      {useInitials(auth.user.name)}
                     </AvatarFallback>
                   </Avatar>
                 </Button>

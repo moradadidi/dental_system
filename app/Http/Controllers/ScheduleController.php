@@ -14,7 +14,7 @@ class ScheduleController extends Controller
     {
         $today = Carbon::now()->format('l'); // Get today's day of the week (e.g., "Monday")
 
-        return Inertia::render('Schedules/Index', [
+        return Inertia::render('schedules/index', [
             'filters' => request()->all('search', 'trashed'),
             'schedules' => Schedule::orderBy('day_of_week')
                 ->filter(request()->only('search', 'trashed'))
@@ -38,7 +38,7 @@ class ScheduleController extends Controller
     {
         $dentist = Dentist::where('user_id', auth()->id())->first();
 
-        return Inertia::render('Schedules/Create', [
+        return Inertia::render('schedules/create', [
             'dentist' => $dentist
         ]);
     }

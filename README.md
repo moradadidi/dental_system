@@ -54,7 +54,7 @@ Ensure you have the following installed:
 6. Build assets & start the development server:
    ```sh
    npm run dev
-   php artisan serve
+   composer run dev
    ```
 
 ## Official Documentation

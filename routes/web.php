@@ -15,6 +15,7 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Middleware\EnsureDentistRole;
 use App\Http\Middleware\EnsurePatientRole;
+use App\Http\Middleware\EnsureAdminRole;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -26,11 +27,12 @@ Route::middleware('auth')->group(function () {
     // Dashboard route (for both roles if needed)
     Route::get('dashboard', [DentistController::class, 'dashboard'])->name('dashboard');
 
+    Route::get('/appointments', AppointementController::class)
+            ->name('appointments.index')->middleware(EnsureAdminRole::class);
     // Routes accessible only to dentists
     Route::middleware(EnsureDentistRole::class)->group(function () {
         // Appointments routes for dentists
-        Route::get('/appointments', AppointementController::class)
-            ->name('appointments.index');
+        
         
         Route::get('/dentists/appointments', [DentistController::class, 'dentistAppointments'])
             ->name('dentists.appointments');

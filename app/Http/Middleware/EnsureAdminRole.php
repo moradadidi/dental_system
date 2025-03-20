@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureDentistRole
+class EnsureAdminRole
 {
     /**
      * Handle an incoming request.
@@ -15,11 +15,10 @@ class EnsureDentistRole
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user() && $request->user()->role === 'dentist') {
-            return $next($request);
-        }
+       if( $request->user() && $request->user()->role === 'admin'){
+           return $next($request);
+       }
+       abort(403, 'Access denied. Admin only.');
 
-        abort(403, 'Access denied. Dentist only.');
     }
-    
 }

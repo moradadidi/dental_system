@@ -49,10 +49,15 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
           { title: "Book Appointment", url: "/appointments/create", icon: Plus },
         ];
 
-  const rightNavItems: NavItem[] = [
-    { title: "Informations", url: `/dentistsInfos/create`, icon: Folder },
-    { title: "Schedules", url: "/schedules/create", icon: BookOpen },
-  ];
+  const rightNavItems: NavItem[] = 
+    userRole === "dentist" ? [
+      { title: "Informations", url: `/dentistsInfos/create`, icon: Folder },
+      { title: "Schedules", url: "/schedules/create", icon: BookOpen },  
+    ] :  [
+      { title: "Informations", url: `/dentistsInfos/create`, icon: Folder },
+      // { title: "Appointments", url: "/myAppointments", icon: Calendar },
+    ]
+    ;
 
   const activeItemStyles = "text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100";
 
